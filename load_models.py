@@ -15,8 +15,14 @@ def parse_namespace(namespace_dict: dict):
         ) for name, quantity in namespace_dict.items()
     }
 
-def load_neurongroups(neuron_model: str, neuron_params_dict: dict, **keyargs):
+def load_neurongroups(neuron_model: str, neuron_params_dict: dict, **neuron_keyargs):
     """
+    Args:
+        neuron_model: neuron descriptions as parsable as brian2.equation
+        neuron_params_dict: {parameter_name: }
+        neuron_keyargs: keyargs to set all brian2.NeuronGroup
+    Return:
+        {group_name: brian2.NeuronGroup}
     """
     return {
         neuron_name : brian2.NeuronGroup(
@@ -27,11 +33,21 @@ def load_neurongroups(neuron_model: str, neuron_params_dict: dict, **keyargs):
                 neuron_params.pop('namespace') if 'namespace' in neuron_params else dict()
             ),
             **neuron_params,
-            **keyargs
+            **neuron_keyargs
         ) for neuron_name, neuron_params in neuron_params_dict.items()
     }
 
 def load_synapses(neurongroup_dict: dict, synapse_model_dict: dict, synapse_params_dict3: dict):
+    """
+    Args:
+        neurongroup_dict: {group_name: brian2.NeuronGroup} parsed by load_neurongroups
+        synapse_model_dict: {synapse_type_name: synapse_model}
+            synapse_model: 
+        synapse_params_dict3: {synapse_type_name: {from_neuron_name: {to_neuron_name: synapse_params}}}
+            synapse_params:
+    Return:
+        [brian2.Synapses, brian2.Synapses, ...]
+    """
     synapse_list = list()
 
     for synapse_type_name, synapse_model in synapse_model_dict.items():
