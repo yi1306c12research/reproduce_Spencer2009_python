@@ -63,3 +63,4 @@ def load_synapses(neurongroup_dict: dict, synapse_model_dict: dict, synapse_para
 
 if __name__ == '__main__':
     #TODO: write tests
+    pass
